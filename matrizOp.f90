@@ -1,17 +1,9 @@
-include 'arpack_wrapper.f90'
+
 module matrixUtilities
     use arpack_eig
     implicit none
     contains 
-        function  getMatrixDimensions(matrix)
-            implicit none
-            real,dimension(:,:)::matrix
-            integer, dimension(2) :: getMatrixDimensions
         
-        
-            getMatrixDimensions=shape(matrix)
-        
-        end function
         
         
         function getIdentity(n) result(matrix)
@@ -40,93 +32,10 @@ module matrixUtilities
         
         end function
 
-        function mulByNumber(matrix,number) result(resultMatrix)
+  
 
-            
-            real,dimension(:,:)::matrix
-            real::number
-            real,dimension(:,:),allocatable::resultMatrix
-            integer,dimension(2)::matrixSize
-            integer::n,m,i,k
-
-
-            matrixSize=getMatrixDimensions(matrix)
-            n=matrixSize(1)
-            m=matrixSize(2)
-            allocate(resultMatrix(n,m))
-
-            
-
-           
-
-            do i=1,n
-                do k=1,m
-                    resultMatrix(i,k)=number* matrix(i,k)
-                end do
-            end do
-
-          
-
-
-        end function
-
-        function addMatrix(matrix1,matrix2) result(resultMatrix)
-
-            real,dimension(:,:)::matrix1,matrix2
-            integer,dimension(2)::dims
-            real,dimension(:,:),allocatable::resultMatrix
-            integer::i,k
-
-            dims=getMatrixDimensions(matrix1)
-
-            allocate(resultMAtrix(dims(1),dims(2)))
-            do i=1,dims(1)
-                do k=1,dims(2)
-                    resultMatrix(i,k)=matrix1(i,k)+matrix2(i,k)
-                end do
-            end do
-            
-        end function
-
-        function substractMatrix(matrix1,matrix2) result(resultMatrix)
-            real,dimension(:,:)::matrix1,matrix2
-            real,dimension(:,:),allocatable::resultMatrix,invMatrix2
-
-            invMAtrix2=mulByNumber(matrix2,-1.0)
-            resultMatrix=addMAtrix(matrix1,invMatrix2)
-            
-        end function
-
-        function mulMatrix(matrix1,matrix2) result(resultMatrix)
-
-            real,dimension(:,:)::matrix1,matrix2
-            real,dimension(:,:),allocatable::resultMatrix
-
-            resultMatrix=matmul(matrix1,matrix2)
-
-
-
-        end function
-
-
-        function transpuesta(matrix) result(resultMatrix)
-
-            real,dimension(:,:)::matrix
-            real,dimension(:,:),allocatable::resultMatrix
-            integer,dimension(2)::dims
-            integer::i,k
-
-            dims=getMatrixDimensions(matrix)
-            allocate(resultMatrix(dims(1),dims(2)))
-            
-            do i=1,dims(1)
-
-                do k=1,dims(2)
-                    resultMatrix(k,i)=matrix(i,k)
-
-                end do
-            end do
-        end function
+        
+       
 
         function norm(matrix) 
 
@@ -150,27 +59,48 @@ module matrixUtilities
         end function
 
         function initialValue(matrix) result(X0)
-
+            
             real,dimension(:,:)::matrix
-            real,dimension(:,:),allocatable::matrixT
             real,dimension(:,:),allocatable::X0
             integer,dimension(2)::dims
+            real::maxProper
 
-            dims=getMatrixDimensions(matrix)
+            dims=shape(matrix)
 
+            maxProper=getMaxProperValue(matrix,dims(1),dims(2))
+            print *,maxProper
+            X0=((1/(maxProper**2))*transpose(matrix))
 
-            matrixT=transpuesta(matrix)
-            X0=matrix
+        end function
 
+        function getMaxProperValue(matrix,m,n) result(value)
+
+            use arpack_eig
+            implicit none
+            integer::m,n
+            real::value
+            real, dimension(m,n) :: matrix
+            real, dimension(n,m) :: T_matrix
+            real :: eigval(m, 1), eigvec(1, m)
+
+            T_matrix=transpose(matrix)
+
+            
+
+            A = matmul(matrix, T_matrix)
+
+            call find_eigens(eigval, eigvec, m, 1, 'LM')
+
+            value=maxval(eigval)
 
         end function
 
         subroutine printMatrix(matrix)
-            real, dimension (:,:) :: matrix  
+            real ,dimension (:,:),intent(in) :: matrix  
             integer, dimension(2) :: matrixSize
             integer :: i
     
-            matrixSize =  getMatrixDimensions(matrix)
+            matrixSize =  shape(matrix)
     
             do i = 1, matrixSize(1)
     
@@ -179,28 +109,23 @@ module matrixUtilities
     
     
         end subroutine
+        function generatedExampleMatrix() result (generatedMatrix)
+            implicit none
+            integer :: i,j
+            integer, dimension(45,30) :: generatedMatrix
+
+            do i = 1,45
+                do j = 1,30
+                    generatedMatrix(i,j) = i**2 + j**2
+                end do
+            end do
+        
+            
+        end function generatedExampleMatrix
 
        
 
 end module matrixUtilities
-
-
-program test 
-    use arpack_eig
-    use matrixUtilities
-    implicit None
-    real,dimension(:,:),allocatable::properValue,x
-    real,dimension(:,:),allocatable::matrix
-
-
-    matrix=getIdentity(6)
-
-    call find_eigens(properValue,x,6,6,'LM')
-
-    call printMatrix(matrix)
-
-
-end program
 
 
 
