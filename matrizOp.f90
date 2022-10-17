@@ -40,20 +40,23 @@ module matrixUtilities
         function norm(matrix) 
 
             real*16,dimension(:,:)::matrix
-            real*16::norm
+            double precision::norm
             integer,dimension(2)::dims
             integer::i,k
-            norm=0.0
+            norm=0.0d0
 
-
+            dims=shape(matrix)
             do i=1,dims(1)
                 do k=1,dims(2)
+                    !print *,"ABS: ",abs(matrix(i,k))**2
+                    !print *,"Norma: ", norm
                     norm =norm + abs(matrix(i,k))**2
-
+                    
                 end do
 
             end do
             norm=sqrt(norm)
+        
 
 
         end function
@@ -68,13 +71,10 @@ module matrixUtilities
             dims=shape(matrix)
 
             maxProper=getMaxProperValue(matrix,dims(1),dims(2))
-            print *,maxProper
-            print *,"Traspuesta"
-            call printMatrix(transpose(matrix))
-            !print *,"X0"
+            
             X0=((1/(maxProper**2))*transpose(matrix))
-
             !call printMatrix(X0)
+           
 
         end function
 
@@ -93,6 +93,7 @@ module matrixUtilities
             
 
             A = matmul(T_matrix, matrix)
+            
 
             call find_eigens(eigval, eigvec, n, 1, 'LM')
 

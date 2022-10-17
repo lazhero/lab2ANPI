@@ -6,7 +6,8 @@ module pseudo
 
 
     function homier(A,iterMax,time,iterations,error) result(X)
-        real*16,intent(out)::time,error
+        real*16,intent(out)::time
+        double precision,intent(out)::error
         integer,intent(out)::iterations
         real*16,dimension(:,:),intent(in)::A
         real*16,dimension(:,:),allocatable::X,X0,I
@@ -19,19 +20,26 @@ module pseudo
         X0=initialValue(A)
         X=homier_aux(A,X0,I,m,n,iterMax,time,iterations,error)
       
+      
     end function
 
 
     function homier_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
-        real*16,intent(out)::time,error
+        real*16,intent(out)::time
+        double precision,intent(out)::error
         integer,intent(out)::iterations
         integer::m,n,k,IterMax
         real*16::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
-        real*16::normF
+        double precision::normF
         real*16::init,finish
         
         call cpu_time(init)
         Xk=X
+
+        Y=matmul(A,Xk)
+        normF=norm(matmul(Y,A)-A)
+        print *, "La norma es ",normF
+
         
         do k=1,IterMax
             iterations=k
@@ -41,7 +49,8 @@ module pseudo
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
             error=normF
-            if(k>1 .and. normF<=0.00001) then
+            !print *,"El error es: ",error
+            if(normF<=0.00001) then
                 Exit
             end if
         end do
@@ -55,7 +64,8 @@ module pseudo
 
 
     function toutonian(A,iterMax,time,iterations,error) result(X)
-        real*16,intent(out)::time,error
+        real*16,intent(out)::time
+        double precision,intent(out)::error
         integer,intent(out)::iterations
         real*16,dimension(:,:),intent(in)::A
         real*16,dimension(:,:),allocatable::X,X0,I
@@ -72,11 +82,12 @@ module pseudo
 
 
     function toutonian_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
-        real*16,intent(out)::time,error
+        real*16,intent(out)::time
+        double precision,intent(out)::error
         integer,intent(out)::iterations
         integer::m,n,k,IterMax
         real*16::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
-        real*16::normF
+        double precision::normF
         real*16::init,finish
         
         call cpu_time(init)
@@ -88,7 +99,55 @@ module pseudo
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
             error=normF
-            if(k>1 .and. normF<=0.00001) then
+            if( normF<=0.00001) then
+                Exit
+            end if
+        end do
+        pseudo=Xk
+        call cpu_time(finish)
+        time=finish-init
+
+
+    end function
+
+
+    function newton(A,iterMax,time,iterations,error) result(X)
+        real*16,intent(out)::time
+        double precision,intent(out)::error
+        integer,intent(out)::iterations
+        real*16,dimension(:,:),intent(in)::A
+        real*16,dimension(:,:),allocatable::X,X0,I
+        integer::m,n,iterMax
+        integer,dimension(2)::dims
+        dims=shape(A)
+        m=dims(1)
+        n=dims(2)
+        I=getIdentity(m)
+        X0=initialValue(A)
+        X=newton_aux(A,X0,I,m,n,iterMax,time,iterations,error)
+      
+    end function
+
+
+    function newton_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
+        real*16,intent(out)::time
+        double precision,intent(out)::error
+        integer,intent(out)::iterations
+        integer::m,n,k,IterMax
+        real*16::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
+        double precision::normF
+        real*16::init,finish
+        
+        call cpu_time(init)
+        Xk=X
+        do k=1,IterMax
+            iterations=k
+            Y=matmul(A,Xk)
+            Xk=2*X-matmul(X,Y)
+            Y=matmul(A,Xk)
+            normF=norm(matmul(Y,A)-A)
+            error=normF
+            if( normF<=0.00001) then
                 Exit
             end if
         end do
@@ -108,24 +167,32 @@ program part1
     implicit none
 
     real*16,dimension(:,:),allocatable::mat,x
-    real*16::times,error
+    real*16::times
+    double precision::error
     integer::iterations
     integer::iterMax
 
     iterMax=250
 
     mat=generatedExampleMatrix()
-    x =toutonian(mat,iterMax,times,iterations,error)
-    print *, "Iteraciones: ",iterations
-    print *, "Tiempo: ",times
-    print *, "Error: ",error
+    !x =toutonian(mat,iterMax,times,iterations,error)
+    !print *, "Iteraciones: ",iterations
+    !print *, "Tiempo: ",times
+    !print *, "Error: ",error
     !call printMatrix(x)
 
-    print *,"_______________________________________________________________________________________"
+    !print *,"_______________________________________________________________________________________"
+    !x=homier(mat,iterMax,times,iterations,error)
+    !print *, "Iteraciones: ",iterations
+    !print *, "Tiempo: ",times
+    !print *, "Error: ",error
+
+
+    x=newton(mat,iterMax,times,iterations,error)
     print *, "Iteraciones: ",iterations
     print *, "Tiempo: ",times
     print *, "Error: ",error
-    x=homier(mat,iterMax,times,iterations,error)
+    
    ! call printMatrix(x)
 
     
