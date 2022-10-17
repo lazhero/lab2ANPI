@@ -1,5 +1,7 @@
-
+include 'arpack_wrapper.f90'
 module matrixUtilities
+    use arpack_eig
+    implicit none
     contains 
         function  getMatrixDimensions(matrix)
             implicit none
@@ -106,6 +108,63 @@ module matrixUtilities
 
         end function
 
+
+        function transpuesta(matrix) result(resultMatrix)
+
+            real,dimension(:,:)::matrix
+            real,dimension(:,:),allocatable::resultMatrix
+            integer,dimension(2)::dims
+            integer::i,k
+
+            dims=getMatrixDimensions(matrix)
+            allocate(resultMatrix(dims(1),dims(2)))
+            
+            do i=1,dims(1)
+
+                do k=1,dims(2)
+                    resultMatrix(k,i)=matrix(i,k)
+
+                end do
+            end do
+        end function
+
+        function norm(matrix) 
+
+            real,dimension(:,:)::matrix
+            real::norm
+            integer,dimension(2)::dims
+            integer::i,k
+            norm=0.0
+
+
+            do i=1,dims(1)
+                do k=1,dims(1)
+                    norm =norm + abs(matrix(i,k))**2
+
+                end do
+
+            end do
+            norm=sqrt(norm)
+
+
+        end function
+
+        function initialValue(matrix) result(X0)
+
+            real,dimension(:,:)::matrix
+            real,dimension(:,:),allocatable::matrixT
+            real,dimension(:,:),allocatable::X0
+            integer,dimension(2)::dims
+
+            dims=getMatrixDimensions(matrix)
+
+
+            matrixT=transpuesta(matrix)
+            X0=matrix
+
+
+        end function
+
         subroutine printMatrix(matrix)
             real, dimension (:,:) :: matrix  
             integer, dimension(2) :: matrixSize
@@ -126,17 +185,22 @@ module matrixUtilities
 end module matrixUtilities
 
 
-
-program example
+program test 
+    use arpack_eig
     use matrixUtilities
-    implicit none
-    real,dimension(:,:),allocatable::matrix,matrix1
-
-    matrix=getIdentity(5)
-    matrix1=mulByNumber(matrix,5.0)
-    call printMatrix(matrix1)
-    
+    implicit None
+    real,dimension(:,:),allocatable::properValue,x
+    real,dimension(:,:),allocatable::matrix
 
 
+    matrix=getIdentity(6)
 
-end program example
+    call find_eigens(properValue,x,6,6,'LM')
+
+    call printMatrix(matrix)
+
+
+end program
+
+
+
