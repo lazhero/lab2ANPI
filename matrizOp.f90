@@ -40,7 +40,7 @@ module matrixUtilities
         function norm(matrix) 
 
             real*16,dimension(:,:)::matrix
-            double complex::norm
+            real*16::norm
             integer,dimension(2)::dims
             integer::i,k
             norm=0.0
@@ -68,7 +68,13 @@ module matrixUtilities
             dims=shape(matrix)
 
             maxProper=getMaxProperValue(matrix,dims(1),dims(2))
+            print *,maxProper
+            print *,"Traspuesta"
+            call printMatrix(transpose(matrix))
+            !print *,"X0"
             X0=((1/(maxProper**2))*transpose(matrix))
+
+            !call printMatrix(X0)
 
         end function
 

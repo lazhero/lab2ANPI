@@ -119,14 +119,14 @@ program part1
     print *, "Iteraciones: ",iterations
     print *, "Tiempo: ",times
     print *, "Error: ",error
-    call printMatrix(x)
+    !call printMatrix(x)
 
     print *,"_______________________________________________________________________________________"
     print *, "Iteraciones: ",iterations
     print *, "Tiempo: ",times
     print *, "Error: ",error
     x=homier(mat,iterMax,times,iterations,error)
-    call printMatrix(x)
+   ! call printMatrix(x)
 
     
 
