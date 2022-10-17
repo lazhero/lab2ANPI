@@ -6,10 +6,10 @@ module pseudo
 
 
     function homier(A,iterMax,time,iterations,error) result(X)
-        real,intent(out)::time,error
+        real*16,intent(out)::time,error
         integer,intent(out)::iterations
-        real,dimension(:,:),intent(in)::A
-        real,dimension(:,:),allocatable::X,X0,I
+        real*16,dimension(:,:),intent(in)::A
+        real*16,dimension(:,:),allocatable::X,X0,I
         integer::m,n,iterMax
         integer,dimension(2)::dims
         dims=shape(A)
@@ -23,12 +23,12 @@ module pseudo
 
 
     function homier_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
-        real,intent(out)::time,error
+        real*16,intent(out)::time,error
         integer,intent(out)::iterations
         integer::m,n,k,IterMax
-        real::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
-        real::normF
-        real::init,finish
+        real*16::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
+        real*16::normF
+        real*16::init,finish
         
         call cpu_time(init)
         Xk=X
@@ -55,10 +55,10 @@ module pseudo
 
 
     function toutonian(A,iterMax,time,iterations,error) result(X)
-        real,intent(out)::time,error
+        real*16,intent(out)::time,error
         integer,intent(out)::iterations
-        real,dimension(:,:),intent(in)::A
-        real,dimension(:,:),allocatable::X,X0,I
+        real*16,dimension(:,:),intent(in)::A
+        real*16,dimension(:,:),allocatable::X,X0,I
         integer::m,n,iterMax
         integer,dimension(2)::dims
         dims=shape(A)
@@ -72,12 +72,12 @@ module pseudo
 
 
     function toutonian_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
-        real,intent(out)::time,error
+        real*16,intent(out)::time,error
         integer,intent(out)::iterations
         integer::m,n,k,IterMax
-        real::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
-        real::normF
-        real::init,finish
+        real*16::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
+        real*16::normF
+        real*16::init,finish
         
         call cpu_time(init)
         Xk=X
@@ -88,7 +88,7 @@ module pseudo
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
             error=normF
-            if(normF<=0.00001) then
+            if(k>1 .and. normF<=0.00001) then
                 Exit
             end if
         end do
@@ -107,8 +107,8 @@ program part1
     use pseudo
     implicit none
 
-    real,dimension(:,:),allocatable::mat,x
-    real::times,error
+    real*16,dimension(:,:),allocatable::mat,x
+    real*16::times,error
     integer::iterations
     integer::iterMax
 

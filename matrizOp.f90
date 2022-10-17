@@ -13,7 +13,7 @@ module matrixUtilities
             !Declaraciones
         
             integer::n
-            real,dimension(n,n)::matrix
+            real*16,dimension(n,n)::matrix
             integer :: i,k
         
             do i=1,n
@@ -39,7 +39,7 @@ module matrixUtilities
 
         function norm(matrix) 
 
-            real,dimension(:,:)::matrix
+            real*16,dimension(:,:)::matrix
             double complex::norm
             integer,dimension(2)::dims
             integer::i,k
@@ -60,10 +60,10 @@ module matrixUtilities
 
         function initialValue(matrix) result(X0)
             
-            real,dimension(:,:)::matrix
-            real,dimension(:,:),allocatable::X0
+            real*16,dimension(:,:)::matrix
+            real*16,dimension(:,:),allocatable::X0
             integer,dimension(2)::dims
-            real::maxProper
+            real*16::maxProper
 
             dims=shape(matrix)
 
@@ -77,9 +77,9 @@ module matrixUtilities
             use arpack_eig
             implicit none
             integer::m,n
-            real::value
-            real, dimension(m,n) :: matrix
-            real, dimension(n,m) :: T_matrix
+            real*16::value
+            real*16, dimension(m,n) :: matrix
+            real*16, dimension(n,m) :: T_matrix
             real :: eigval(m, 1), eigvec(1, m)
 
             T_matrix=transpose(matrix)
@@ -95,7 +95,7 @@ module matrixUtilities
         end function
 
         subroutine printMatrix(matrix)
-            real ,dimension (:,:),intent(in) :: matrix  
+            real*16 ,dimension (:,:),intent(in) :: matrix  
             integer, dimension(2) :: matrixSize
             integer :: i
     
