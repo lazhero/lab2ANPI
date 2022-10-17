@@ -5,8 +5,9 @@ module pseudo
     contains 
 
 
-    function homier(A,iterMax,time) result(X)
-        real,intent(out)::time
+    function homier(A,iterMax,time,iterations,error) result(X)
+        real,intent(out)::time,error
+        integer,intent(out)::iterations
         real,dimension(:,:),intent(in)::A
         real,dimension(:,:),allocatable::X,X0,I
         integer::m,n,iterMax
@@ -16,13 +17,14 @@ module pseudo
         n=dims(2)
         I=getIdentity(m)
         X0=initialValue(A)
-        X=homier_aux(A,X0,I,m,n,iterMax,time)
+        X=homier_aux(A,X0,I,m,n,iterMax,time,iterations,error)
       
     end function
 
 
-    function homier_aux(A,X,I,m,n,IterMax,time) result(pseudo)
-        real,intent(out)::time
+    function homier_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
+        real,intent(out)::time,error
+        integer,intent(out)::iterations
         integer::m,n,k,IterMax
         real::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
         real::normF
@@ -32,12 +34,13 @@ module pseudo
         Xk=X
         
         do k=1,IterMax
+            iterations=k
             Y=matmul(A,Xk)
             Xk=matmul(Xk,(I+0.5*matmul((I-Y),(I+(2*I-Y)**2))))
             
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
-            print *,normF
+            error=normF
             if(k>1 .and. normF<=0.00001) then
                 Exit
             end if
@@ -51,8 +54,9 @@ module pseudo
 
 
 
-    function midpoint(A,iterMax,time) result(X)
-        real,intent(out)::time
+    function toutonian(A,iterMax,time,iterations,error) result(X)
+        real,intent(out)::time,error
+        integer,intent(out)::iterations
         real,dimension(:,:),intent(in)::A
         real,dimension(:,:),allocatable::X,X0,I
         integer::m,n,iterMax
@@ -62,13 +66,14 @@ module pseudo
         n=dims(2)
         I=getIdentity(m)
         X0=initialValue(A)
-        X=midpoint_aux(A,X0,I,m,n,iterMax,time)
+        X=toutonian_aux(A,X0,I,m,n,iterMax,time,iterations,error)
       
     end function
 
 
-    function midpoint_aux(A,X,I,m,n,IterMax,time) result(pseudo)
-        real,intent(out)::time
+    function toutonian_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
+        real,intent(out)::time,error
+        integer,intent(out)::iterations
         integer::m,n,k,IterMax
         real::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
         real::normF
@@ -77,11 +82,12 @@ module pseudo
         call cpu_time(init)
         Xk=X
         do k=1,IterMax
+            iterations=k
             Y=matmul(A,Xk)
-            Xk=2*Xk-matmul(Xk,Y)
+            Xk=0.5*matmul(Xk,(9*I-matmul(Y,(16*I-matmul(Y,(14*I-matmul(Y,(6*I-Y))))))))
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
-            print *,normF
+            error=normF
             if(normF<=0.00001) then
                 Exit
             end if
@@ -102,13 +108,24 @@ program part1
     implicit none
 
     real,dimension(:,:),allocatable::mat,x
-    real::times
+    real::times,error
+    integer::iterations
     integer::iterMax
 
     iterMax=250
 
     mat=generatedExampleMatrix()
-    x =midpoint(mat,iterMax,times)
+    x =toutonian(mat,iterMax,times,iterations,error)
+    print *, "Iteraciones: ",iterations
+    print *, "Tiempo: ",times
+    print *, "Error: ",error
+    call printMatrix(x)
+
+    print *,"_______________________________________________________________________________________"
+    print *, "Iteraciones: ",iterations
+    print *, "Tiempo: ",times
+    print *, "Error: ",error
+    x=homier(mat,iterMax,times,iterations,error)
     call printMatrix(x)
 
     
