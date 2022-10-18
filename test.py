@@ -57,7 +57,9 @@ def newton(A,iterMax):
         Y=np.dot(A,X)
        
         X=np.subtract(np.multiply(X,2),np.dot(X,Y))
-        
+        if(i<2):
+            print(X)
+            print("____________________________________________________________________________________")
         Y=np.dot(A,X)
         error=np.linalg.norm(np.subtract(np.dot(Y,A),A),ord='fro')
         print(error)
@@ -68,7 +70,7 @@ def newton(A,iterMax):
 
 
 
-X,iteraciones,error=homeir(getMatrizExample(),250)
+X,iteraciones,error=newton(getMatrizExample(),250)
 print(X)
 print(iteraciones)
 print(error)

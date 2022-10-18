@@ -138,15 +138,21 @@ module pseudo
         double precision::normF
         real*16::init,finish
         
+        
         call cpu_time(init)
         Xk=X
         do k=1,IterMax
             iterations=k
             Y=matmul(A,Xk)
-            Xk=2*X-matmul(X,Y)
+            Xk=2*Xk-matmul(Xk,Y)
+            if(k<=3) then
+                call printMatrix(Xk)
+                print *,"______________________________________________________________________________________________________"
+            end if
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
             error=normF
+            !print *,normF
             if( normF<=0.00001) then
                 Exit
             end if
