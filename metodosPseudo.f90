@@ -4,7 +4,16 @@ module pseudo
     implicit None
     contains 
 
-
+    !
+    ! Descripcion: Método utilizado para calcular la aproximacion de la pseudoinversa de una matriz mediante el método de homier
+    ! Entradas:
+    !           * A: La matriz a la cual calcular la pseudoinversa
+    !           * iterMax: el numero maximo de iteraciones necesarias
+    ! Salidas:
+    !           * time: El tiempo requerido para ejecutar la aproximacion
+    !           * iteraciones: las iteraciones utilizadas para el calculo
+    !           * error: el error resultante
+    !           * X: la matriz pseudoinversa
     function homier(A,iterMax,time,iterations,error) result(X)
         real*16,intent(out)::time
         double precision,intent(out)::error
@@ -16,14 +25,27 @@ module pseudo
         dims=shape(A)
         m=dims(1)
         n=dims(2)
-        I=getIdentity(m)
-        X0=initialValue(A)
-        X=homier_aux(A,X0,I,m,n,iterMax,time,iterations,error)
+        I=getIdentity(m) !obtiene la matrix identidad
+        X0=initialValue(A) ! calculo del valor inicia
+        X=homier_aux(A,X0,I,m,n,iterMax,time,iterations,error) !llama a la funcion auxiliar
       
       
     end function
 
-
+    !
+    ! Descripcion: Método auxiliar utilizado para calcular la aproximacion de la pseudoinversa de una matriz mediante el método de homier
+    ! Entradas:
+    !           * A: La matriz a la cual calcular la pseudoinversa
+    !           * X: La aproximacion inicial
+    !           * I: Una matrix identidad de dimensiones mxm
+    !           * m: el numero de filas de la matriz A
+    !           * n: el numero de columnas de la matriz A
+    !           * iterMax: el numero maximo de iteraciones necesarias
+    ! Salidas:
+    !           * time: El tiempo requerido para ejecutar la aproximacion
+    !           * iteraciones: las iteraciones utilizadas para el calculo
+    !           * error: el error resultante
+    !           * pseudo: la matriz pseudo inversa resultante
     function homier_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
         real*16,intent(out)::time
         double precision,intent(out)::error
