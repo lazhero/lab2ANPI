@@ -1,14 +1,24 @@
 
+
+!
+!
+!Laboratorio 2 ANPI
+!
+!
+! Luis Andrey Zúñiga
+! Brian Wagemans Alvarado
+! Adrian Gonzalez  Jimenez
+!
 module matrixUtilities
     use arpack_eig
     implicit none
     contains 
         
         !Descripcion: Obtiene una matriz cuadrada con n filas y n columnas
-        !Entradas: n un número entero positivo indicando el numero de files y columnas
-        ! Salida: Matriz es la matriz identidad solicitada
-        !
-        !
+        !Entradas: 
+        !             *n un número entero positivo indicando el numero de files y columnas
+        ! Salida: 
+        !             *Matriz es la matriz identidad solicitada
         !
         
         function getIdentity(n) result(matrix)

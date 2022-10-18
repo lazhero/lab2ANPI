@@ -1,3 +1,13 @@
+
+!
+!
+!Laboratorio 2 ANPI
+!
+!
+! Luis Andrey Zúñiga
+! Brian Wagemans Alvarado
+! Adrian Gonzalez  Jimenez
+!
 program part1
     use matrixUtilities
     use pseudo

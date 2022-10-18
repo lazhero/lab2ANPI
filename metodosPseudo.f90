@@ -1,4 +1,15 @@
 
+!
+!
+!Laboratorio 2 ANPI
+!
+!
+! Luis Andrey Zúñiga
+! Brian Wagemans Alvarado
+! Adrian Gonzalez  Jimenez
+!
+
+
 module pseudo
     use matrixUtilities
     implicit None
@@ -79,7 +90,16 @@ module pseudo
     end function
 
 
-
+    !
+    ! Descripcion: Método utilizado para calcular la aproximacion de la pseudoinversa de una matriz mediante el método de toutonian
+    ! Entradas:
+    !           * A: La matriz a la cual calcular la pseudoinversa
+    !           * iterMax: el numero maximo de iteraciones necesarias
+    ! Salidas:
+    !           * time: El tiempo requerido para ejecutar la aproximacion
+    !           * iteraciones: las iteraciones utilizadas para el calculo
+    !           * error: el error resultante
+    !           * X: la matriz pseudoinversa
     function toutonian(A,iterMax,time,iterations,error) result(X)
         real*16,intent(out)::time
         double precision,intent(out)::error
@@ -98,6 +118,23 @@ module pseudo
     end function
 
 
+
+
+
+        !
+    ! Descripcion: Método auxiliar utilizado para calcular la aproximacion de la pseudoinversa de una matriz mediante el método de toutonian
+    ! Entradas:
+    !           * A: La matriz a la cual calcular la pseudoinversa
+    !           * X: La aproximacion inicial
+    !           * I: Una matrix identidad de dimensiones mxm
+    !           * m: el numero de filas de la matriz A
+    !           * n: el numero de columnas de la matriz A
+    !           * iterMax: el numero maximo de iteraciones necesarias
+    ! Salidas:
+    !           * time: El tiempo requerido para ejecutar la aproximacion
+    !           * iteraciones: las iteraciones utilizadas para el calculo
+    !           * error: el error resultante
+    !           * pseudo: la matriz pseudo inversa resultante
     function toutonian_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
         real*16,intent(out)::time
         double precision,intent(out)::error
@@ -129,6 +166,18 @@ module pseudo
     end function
 
 
+
+    !
+    ! Descripcion: Método utilizado para calcular la aproximacion de la pseudoinversa de una matriz mediante el método de Newtown
+    ! Entradas:
+    !           * A: La matriz a la cual calcular la pseudoinversa
+    !           * iterMax: el numero maximo de iteraciones necesarias
+    ! Salidas:
+    !           * time: El tiempo requerido para ejecutar la aproximacion
+    !           * iteraciones: las iteraciones utilizadas para el calculo
+    !           * error: el error resultante
+    !           * X: la matriz pseudoinversa
+
     function newton(A,iterMax,time,iterations,error) result(X)
         real*16,intent(out)::time
         double precision,intent(out)::error
@@ -147,6 +196,21 @@ module pseudo
     end function
 
 
+
+    !
+    ! Descripcion: Método auxiliar utilizado para calcular la aproximacion de la pseudoinversa de una matriz mediante el método de Newtown
+    ! Entradas:
+    !           * A: La matriz a la cual calcular la pseudoinversa
+    !           * X: La aproximacion inicial
+    !           * I: Una matrix identidad de dimensiones mxm
+    !           * m: el numero de filas de la matriz A
+    !           * n: el numero de columnas de la matriz A
+    !           * iterMax: el numero maximo de iteraciones necesarias
+    ! Salidas:
+    !           * time: El tiempo requerido para ejecutar la aproximacion
+    !           * iteraciones: las iteraciones utilizadas para el calculo
+    !           * error: el error resultante
+    !           * pseudo: la matriz pseudo inversa resultante
     function newton_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
         real*16,intent(out)::time
         double precision,intent(out)::error
@@ -179,6 +243,18 @@ module pseudo
     end function
 
 
+    !
+    ! Descripcion: Método utilizado para calcular la aproximacion de la pseudoinversa de una matriz mediante el método de chebyshev
+    ! Entradas:
+    !           * A: La matriz a la cual calcular la pseudoinversa
+    !           * iterMax: el numero maximo de iteraciones necesarias
+    ! Salidas:
+    !           * time: El tiempo requerido para ejecutar la aproximacion
+    !           * iteraciones: las iteraciones utilizadas para el calculo
+    !           * error: el error resultante
+    !           * X: la matriz pseudoinversa
+
+
     function chebyshev(A,iterMax,time,iterations,error) result(X)
         real*16,intent(out)::time
         double precision,intent(out)::error
@@ -196,6 +272,21 @@ module pseudo
     end function
 
 
+
+    !
+    ! Descripcion: Método auxiliar utilizado para calcular la aproximacion de la pseudoinversa de una matriz mediante el método de chebyshev
+    ! Entradas:
+    !           * A: La matriz a la cual calcular la pseudoinversa
+    !           * X: La aproximacion inicial
+    !           * I: Una matrix identidad de dimensiones mxm
+    !           * m: el numero de filas de la matriz A
+    !           * n: el numero de columnas de la matriz A
+    !           * iterMax: el numero maximo de iteraciones necesarias
+    ! Salidas:
+    !           * time: El tiempo requerido para ejecutar la aproximacion
+    !           * iteraciones: las iteraciones utilizadas para el calculo
+    !           * error: el error resultante
+    !           * pseudo: la matriz pseudo inversa resultante
     function chebyshev_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
         real*16,intent(out)::time
         double precision,intent(out)::error

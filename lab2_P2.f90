@@ -1,10 +1,25 @@
+
+!
+!
+!Laboratorio 2 ANPI
+!
+!
+! Luis Andrey Zúñiga
+! Brian Wagemans Alvarado
+! Adrian Gonzalez  Jimenez
+!
+
 module part2_example
     use matrixUtilities
     implicit none
     
 
     contains 
-
+    !
+    ! Descripcion: Método utilizado para generar la matriz a solucionar
+    ! Entradas:
+    ! Salidas:
+    !         *matrix matriz que representa la aplicación del problema
     function generateMatrixAplication() result(matrix)
         implicit none
         real*16,dimension(10,10)::matrix  !matriz de mxn
@@ -53,7 +68,11 @@ module part2_example
 
     end function
 
-
+    !
+    ! Descripcion: Genera el vector b designado para la solución del problema propuesto por el grupo
+    ! Entradas:
+    ! Salidas:
+    !         *matrix vector b
     function generateMatrixSolution() result(matrix)
         implicit none
         real*16,dimension(10,1)::matrix  !matriz de =mx1
