@@ -145,10 +145,6 @@ module pseudo
             iterations=k
             Y=matmul(A,Xk)
             Xk=2*Xk-matmul(Xk,Y)
-            if(k<=3) then
-                call printMatrix(Xk)
-                print *,"______________________________________________________________________________________________________"
-            end if
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
             error=normF
