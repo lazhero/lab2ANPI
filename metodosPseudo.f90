@@ -36,15 +36,11 @@ module pseudo
         call cpu_time(init)
         Xk=X
 
-        Y=matmul(A,Xk)
-        normF=norm(matmul(Y,A)-A)
-        print *, "La norma es ",normF
-
         
         do k=1,IterMax
             iterations=k
             Y=matmul(A,Xk)
-            Xk=matmul(Xk,(I+0.5*matmul((I-Y),(I+(2*I-Y)**2))))
+            Xk=matmul(Xk,(I+0.5*matmul((I-Y),(I+matmul((2*I-Y),(2*I-Y))))))
             
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
@@ -99,6 +95,7 @@ module pseudo
             Y=matmul(A,Xk)
             normF=norm(matmul(Y,A)-A)
             error=normF
+           
             if( normF<=0.00001) then
                 Exit
             end if
@@ -161,6 +158,56 @@ module pseudo
     end function
 
 
+    function chebyshev(A,iterMax,time,iterations,error) result(X)
+        real*16,intent(out)::time
+        double precision,intent(out)::error
+        integer,intent(out)::iterations
+        real*16,dimension(:,:),intent(in)::A
+        real*16,dimension(:,:),allocatable::X,X0,I
+        integer::m,n,iterMax
+        integer,dimension(2)::dims
+        dims=shape(A)
+        m=dims(1)
+        n=dims(2)
+        I=getIdentity(m)
+        X0=initialValue(A)
+        X=chebyshev_aux(A,X0,I,m,n,iterMax,time,iterations,error)
+      
+    end function
+
+
+    function chebyshev_aux(A,X,I,m,n,IterMax,time,iterations,error) result(pseudo)
+        real*16,intent(out)::time
+        double precision,intent(out)::error
+        integer,intent(out)::iterations
+        integer::m,n,k,IterMax
+        real*16::A(m,n),X(n,m),I(m,m),pseudo(n,m),Xk(n,m),Y(m,m)
+        double precision::normF
+        real*16::init,finish
+        
+        
+        call cpu_time(init)
+        Xk=X
+        do k=1,IterMax
+            iterations=k
+            Y=matmul(A,Xk)
+            Xk=matmul( Xk,(3*I -  matmul(Y,(3*I-Y ))))
+            Y=matmul(A,Xk)
+            normF=norm(matmul(Y,A)-A)
+            error=normF
+            !print *,normF
+            if( normF<=0.00001) then
+                Exit
+            end if
+        end do
+        pseudo=Xk
+        call cpu_time(finish)
+        time=finish-init
+
+
+    end function
+
+
 end module pseudo
 
 program part1
@@ -176,33 +223,58 @@ program part1
 
     iterMax=250
 
+
+    
     mat=generatedExampleMatrix()
-    !x =toutonian(mat,iterMax,times,iterations,error)
-    !print *, "Iteraciones: ",iterations
-    !print *, "Tiempo: ",times
-    !print *, "Error: ",error
-    !call printMatrix(x)
-
-    !print *,"_______________________________________________________________________________________"
-    !x=homier(mat,iterMax,times,iterations,error)
-    !print *, "Iteraciones: ",iterations
-    !print *, "Tiempo: ",times
-    !print *, "Error: ",error
-
 
     x=newton(mat,iterMax,times,iterations,error)
+    print *,"_______________________________________________________________________________________"
+    !Para mostrar la matriz quitar el comentario en la siguiente linea
+    !call printMatrix(x)
+    print *, "Metodo de Newton"
     print *, "Iteraciones: ",iterations
     print *, "Tiempo: ",times
     print *, "Error: ",error
-    
-   ! call printMatrix(x)
 
-    
 
+    x=chebyshev(mat,iterMax,times,iterations,error)
+    print *,"_______________________________________________________________________________________"
+    !Para mostrar la matriz quitar el comentario en la siguiente linea
+    !call printMatrix(x)
+    print *, "Metodo de ChebyShev"
+    print *, "Iteraciones: ",iterations
+    print *, "Tiempo: ",times
+    print *, "Error: ",error
+
+    x=homier(mat,iterMax,times,iterations,error)
+    print *,"_______________________________________________________________________________________"
+    !Para mostrar la matriz quitar el comentario en la siguiente linea
+    !call printMatrix(x)
+    print *, "Metodo de Homier"
+    print *, "Iteraciones: ",iterations
+    print *, "Tiempo: ",times
+    print *, "Error: ",error
+
+
+    x =toutonian(mat,iterMax,times,iterations,error)
+    print *,"_______________________________________________________________________________________"
+    !Para mostrar la matriz quitar el comentario en la siguiente linea
+    !call printMatrix(x)
+    print *, "Metodo de Toutonia"
+    print *, "Iteraciones: ",iterations
+    print *, "Tiempo: ",times
+    print *, "Error: ",error
    
-        
+    
+    
+   
 
-       
+
+    
+
+
+    
+     
     
 
 end program part1
