@@ -13,15 +13,43 @@ module part2_example
 
         m=10
         n=10
+        matrix(1,1) = 1
 
-        do i=1,m
-            do k=1,n
+        matrix(2,2) = 1
 
-                matrix(i,k)=5  !algun valor que quiera poner
-            end do
+        matrix(3,1) = -1
+        matrix(3,2) = -1
+        matrix(3,3) = 2
 
-        end do
-        
+        matrix(4,2) = -2
+        matrix(4,4) = 3
+        matrix(4,5) = -1
+
+        matrix(5,4) = -2
+        matrix(5,5) = 7
+        matrix(5,6) = -1
+        matrix(5,10) = -4
+
+        matrix(6,5) = -1
+        matrix(6,6) = 2
+        matrix(6,7) = -1
+
+        matrix(7,1) = -12
+        matrix(7,6) = -3
+        matrix(7,7) = 19
+        matrix(7,8) = -4
+
+        matrix(8,7) = -1
+        matrix(8,8) = 2
+        matrix(8,9) = -1
+
+        matrix(9,8) = -1
+        matrix(9,9) = 4
+        matrix(9,10) = -3
+
+        matrix(10,5) = -1
+        matrix(10,9) = -1
+        matrix(10,10) = 2
 
     end function
 
@@ -35,10 +63,7 @@ module part2_example
         m=10
 
      
-        do i=1,m
-
-            matrix(i,1)=5  !algun valor que quiera poner
-        end do
+        matrix(2,1)=12
 
        
 

@@ -94,7 +94,7 @@ module matrixUtilities
 
             A = matmul(T_matrix, matrix)
             
-
+            !Este es el metodo creado por Melkiades
             call find_eigens(eigval, eigvec, n, 1, 'LM')
 
             value=maxval(eigval)
